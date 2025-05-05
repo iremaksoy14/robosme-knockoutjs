@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="libs/knockout-3.5.1.js"></script>
+  </head>
+  <body>
+    <div class="container" data-bind="with: login">
+      <div class="card">
+        <h2 class="title">User Login</h2>
+
+        <input
+          type="text"
+          placeholder="Company Code"
+          data-bind="value: companyCode"
+        />
+        <div
+          class="error"
+          data-bind="visible: companyCodeError, text: companyCodeError"
+        ></div>
+
+        <input type="text" placeholder="Region" data-bind="value: region" />
+        <div
+          class="error"
+          data-bind="visible: regionError, text: regionError"
+        ></div>
+
+        <input type="email" placeholder="E-mail" data-bind="value: email" />
+        <div
+          class="error"
+          data-bind="visible: emailError, text: emailError"
+        ></div>
+
+        <input
+          type="password"
+          placeholder="Password"
+          data-bind="value: password"
+        />
+        <div
+          class="error"
+          data-bind="visible: passwordError, text: passwordError"
+        ></div>
+
+        <button data-bind="click: loginUser">Login</button>
+      </div>
+    </div>
+
+    <script src="viewmodels/loginViewModel.js"></script>
+    <script>
+      const appViewModel = {
+        login: new LoginViewModel(),
+      };
+      ko.applyBindings(appViewModel);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Post Detail</title>
+    <script src="libs/knockout-3.5.1.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        padding: 40px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .card-detail {
+        background-color: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+        max-width: 600px;
+        width: 100%;
+      }
+
+      h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-top: 12px;
+        margin-bottom: 6px;
+        font-weight: bold;
+        font-size: 14px;
+      }
+
+      input[type="text"],
+      textarea {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .submit-btn {
+        margin-top: 20px;
+        padding: 12px 20px;
+
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        cursor: pointer;
+        margin-right: 10px;
+      }
+      .save {
+        background-color: #2563eb;
+      }
+      .cancel {
+        background-color: gray;
+      }
+
+      .save:hover {
+        background-color: #1d4ed8;
+      }
+
+      #toast {
+        visibility: hidden;
+        min-width: 250px;
+        background-color: #4ade80;
+        color: white;
+        text-align: center;
+        border-radius: 8px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1;
+        left: 50%;
+        bottom: 30px;
+        font-size: 14px;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: opacity 0.5s, bottom 0.5s;
+      }
+
+      #toast.show {
+        visibility: visible;
+        opacity: 1;
+        bottom: 50px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card-detail" data-bind="with: post">
+      <h2>Post Detail</h2>
+      <label>Title</label>
+      <input type="text" data-bind="value: title" />
+
+      <label>Content</label>
+      <textarea data-bind="value: body"></textarea>
+
+      <button class="submit-btn save" data-bind="click: $parent.savePost">
+        Save
+      </button>
+      <button class="submit-btn cancel" data-bind="click: $parent.cancelPost">
+        Cancel
+      </button>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+      function showToast(message) {
+        const toast = document.getElementById("toast");
+        toast.textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => {
+          toast.classList.remove("show");
+        }, 3000);
+      }
+
+      function PostDetailViewModel() {
+        const self = this;
+
+        const storedPost = JSON.parse(localStorage.getItem("selectedPost"));
+
+        self.post = ko.observable({
+          id: storedPost?.id,
+          title: ko.observable(storedPost?.title || ""),
+          body: ko.observable(storedPost?.body || ""),
+        });
+
+        self.savePost = function () {
+          const updatedPost = {
+            id: self.post().id,
+            title: self.post().title(),
+            body: self.post().body(),
+          };
+
+          localStorage.setItem("selectedPost", JSON.stringify(updatedPost));
+          showToast("post updated");
+        };
+
+        self.cancelPost = function () {
+          window.location.href = "posts.html";
+        };
+      }
+
+      ko.applyBindings(new PostDetailViewModel());
+    </script>
+  </body>
+</html>
